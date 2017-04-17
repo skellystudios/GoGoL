@@ -52,7 +52,7 @@ func MakeGrid() [][]int {
 }
 
 func InitalizeGrid() [][]int {
-	grid := makeGrid()
+	grid := MakeGrid()
 	// initialize the grid of zeros
 	for i := 0; i < GridSize; i++ {
 		for j := 0; j < GridSize; j++ {
@@ -93,4 +93,18 @@ func ClearTerminal() {
 	cmd := exec.Command("clear") //Linux example, its tested
 	cmd.Stdout = os.Stdout
 	cmd.Run()
+}
+
+func MakeGridChannels() [][]chan int {
+	grid := make([][]chan int, GridSize)
+	for i := range grid {
+		grid[i] = make([]chan int, GridSize)
+	}
+	// initialize the grid of zeros
+	for i := 0; i < GridSize; i++ {
+		for j := 0; j < GridSize; j++ {
+			grid[i][j] = make(chan int, 8)
+		}
+	}
+	return grid
 }

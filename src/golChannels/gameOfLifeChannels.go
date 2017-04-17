@@ -3,25 +3,19 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"os/exec"
+	"GoGOL/src/golutils"
 )
 
-// gridSize: N x N size of the grid
-const gridSize = 30
+const gridSize = golutils.GridSize
 const numCells = gridSize * gridSize
-
-// generations: How long to run the simulation for
-const generations = 1000
 
 var done = make(chan int, numCells)
 
 func main() {
 
-	grid := initalizeGrid()
-	inboxes := makeGridChannels()
-	readyChannels := makeGridChannels()
+	grid := golutils.InitalizeGrid()
+	inboxes := golutils.MakeGridChannels()
+	readyChannels := golutils.MakeGridChannels()
 
 	// Set up the go routines
 	for i := 0; i < gridSize; i++ {
@@ -31,13 +25,13 @@ func main() {
 		}
 	}
 
-	for generation := 0; generation < generations; generation++ {
+	for generation := 0; generation < golutils.Generations; generation++ {
 		// Wait until we've got enough "done"s
 		for i := 0; i < numCells; i++ {
 			<-done
 		}
 		// Print the grid
-		printOutput(generation, grid)
+		golutils.PrintOutput(generation, grid)
 		// Tell all the workers to continue again
 		for i := 0; i < gridSize; i++ {
 			for j := 0; j < gridSize; j++ {
@@ -79,103 +73,10 @@ func worker(cell *int, inbox chan int, ready chan int, neighbours []chan int) {
 }
 
 func getNeighboursChannels(coords []int, grid [][]chan int) []chan int {
-	neighbours := getNeighbours(coords)
+	neighbours := golutils.GetNeighbours(coords)
 	neighbourChannels := make([]chan int, 0)
 	for _, n := range neighbours {
 		neighbourChannels = append(neighbourChannels, grid[n[0]][n[1]])
 	}
 	return neighbourChannels
-}
-
-func getNeighbours(coords []int) [][]int {
-	directions := [][]int{{-1, -1}, {-1, 0}, {0, -1}, {0, 1}, {1, 0}, {1, 1}, {1, -1}, {-1, 1}}
-	results := make([][]int, 0)
-	for i := range directions {
-		x := directions[i][0] + coords[0]
-		y := directions[i][1] + coords[1]
-
-		// Make the grid wrap
-		if x < 0 {
-			x = x + gridSize
-		}
-		if y < 0 {
-			y = y + gridSize
-		}
-		if x >= gridSize {
-			x = 0
-		}
-		if y >= gridSize {
-			y = 0
-		}
-
-		results = append(results, []int{x, y})
-
-	}
-	return results
-}
-
-func makeGrid() [][]int {
-	grid := make([][]int, gridSize)
-	for i := range grid {
-		grid[i] = make([]int, gridSize)
-	}
-	return grid
-}
-
-func initalizeGrid() [][]int {
-	grid := makeGrid()
-	// initialize the grid of zeros
-	for i := 0; i < gridSize; i++ {
-		for j := 0; j < gridSize; j++ {
-			grid[i][j] = 0
-		}
-	}
-
-	// Now we put some simple initial things in (a glider, and something which collapses to a stready diamond)
-	initialActive := [][]int{{4, 4}, {4, 5}, {5, 6}, {5, 5}, {9, 5}, {8, 6}, {10, 5}, {10, 6}, {10, 7}}
-	for _, element := range initialActive {
-		grid[element[0]][element[1]] = 1
-	}
-
-	return grid
-}
-
-func makeGridChannels() [][]chan int {
-	grid := make([][]chan int, gridSize)
-	for i := range grid {
-		grid[i] = make([]chan int, gridSize)
-	}
-	// initialize the grid of zeros
-	for i := 0; i < gridSize; i++ {
-		for j := 0; j < gridSize; j++ {
-			grid[i][j] = make(chan int, 8)
-		}
-	}
-	return grid
-}
-
-func printGrid(grid [][]int) {
-	for i := 0; i < gridSize; i++ {
-		for j := 0; j < gridSize; j++ {
-			icon := "_"
-			if grid[i][j] == 1 {
-				icon = "█"
-			}
-			fmt.Print(icon, " ")
-		}
-		fmt.Println()
-	}
-}
-
-func printOutput(generation int, grid [][]int) {
-	clearTerminal()
-	fmt.Print("Generation: ", generation)
-	fmt.Println()
-	printGrid(grid)
-}
-
-func clearTerminal() {
-	cmd := exec.Command("clear") //Linux example, its tested
-	cmd.Stdout = os.Stdout
-	cmd.Run()
 }
