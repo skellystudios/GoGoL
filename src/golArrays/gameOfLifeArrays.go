@@ -24,10 +24,7 @@ func main() {
 	// Any live cell with more than three live neighbours dies, as if by over-population.
 	// Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 	for generation := 0; generation < generations; generation++ {
-		clearTerminal()
-		fmt.Print("Generation: ", generation)
-		fmt.Println()
-		printGrid(grid)
+		printOutput(generation, grid)
 		newGrid := makeGrid()
 		for i := 0; i < gridSize; i++ {
 			for j := 0; j < gridSize; j++ {
@@ -123,6 +120,13 @@ func printGrid(grid [][]int) {
 		}
 		fmt.Println()
 	}
+}
+
+func printOutput(generation int, grid [][]int) {
+	clearTerminal()
+	fmt.Print("Generation: ", generation)
+	fmt.Println()
+	printGrid(grid)
 }
 
 func clearTerminal() {
