@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"time"
 )
 
 // gridSize: N x N size of the grid
 const gridSize = 20
+
+// generations: How long to run the simulation for
+const generations = 100
 
 func main() {
 
@@ -21,7 +23,7 @@ func main() {
 	// Any live cell with two or three live neighbours lives on to the next generation.
 	// Any live cell with more than three live neighbours dies, as if by over-population.
 	// Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-	for generation := 0; generation < gridSize; generation++ {
+	for generation := 0; generation < generations; generation++ {
 		clearTerminal()
 		fmt.Print("Generation: ", generation)
 		fmt.Println()
@@ -43,7 +45,6 @@ func main() {
 			}
 		}
 		grid = newGrid
-		time.Sleep(time.Second)
 
 	}
 
@@ -64,9 +65,23 @@ func getNeighbours(coords []int) [][]int {
 	for i := range directions {
 		x := directions[i][0] + coords[0]
 		y := directions[i][1] + coords[1]
-		if x >= 0 && y >= 0 && x < gridSize && y < gridSize {
-			results = append(results, []int{x, y})
+
+		// Make the grid wrap
+		if x < 0 {
+			x = x + gridSize
 		}
+		if y < 0 {
+			y = y + gridSize
+		}
+		if x >= gridSize {
+			x = 0
+		}
+		if y >= gridSize {
+			y = 0
+		}
+
+		results = append(results, []int{x, y})
+
 	}
 	return results
 }
@@ -88,7 +103,7 @@ func initalizeGrid() [][]int {
 		}
 	}
 
-	// Now we put some simple initial
+	// Now we put some simple initial things in (a glider, and something which collapses to a stready diamond)
 	initialActive := [][]int{{4, 4}, {4, 5}, {5, 6}, {5, 5}, {9, 5}, {8, 6}, {10, 5}, {10, 6}, {10, 7}}
 	for _, element := range initialActive {
 		grid[element[0]][element[1]] = 1
