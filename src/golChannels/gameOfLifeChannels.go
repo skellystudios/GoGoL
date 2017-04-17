@@ -10,11 +10,12 @@ import (
 
 // gridSize: N x N size of the grid
 const gridSize = 30
+const numCells = gridSize * gridSize
 
 // generations: How long to run the simulation for
-const generations = 100
+const generations = 1000
 
-var done chan int
+var done = make(chan int, numCells)
 
 func main() {
 
@@ -30,7 +31,6 @@ func main() {
 		}
 	}
 
-	numCells := gridSize * gridSize
 	for generation := 0; generation < generations; generation++ {
 		// Wait until we've got enough "done"s
 		for i := 0; i < numCells; i++ {

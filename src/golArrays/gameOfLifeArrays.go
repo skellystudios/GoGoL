@@ -4,18 +4,19 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
+	"time"
 )
 
 // gridSize: N x N size of the grid
-const gridSize = 30
+const gridSize = 45
 
 // generations: How long to run the simulation for
-const generations = 100
+const generations = 1000
 
 func main() {
-
 	grid := initalizeGrid()
 
 	// Every 'tick'
@@ -96,12 +97,12 @@ func initalizeGrid() [][]int {
 	// initialize the grid of zeros
 	for i := 0; i < gridSize; i++ {
 		for j := 0; j < gridSize; j++ {
-			grid[i][j] = 0
+			grid[i][j] = rand.New(rand.NewSource(time.Now().UnixNano())).Intn(2)
 		}
 	}
 
 	// Now we put some simple initial things in (a glider, and something which collapses to a stready diamond)
-	initialActive := [][]int{{4, 4}, {4, 5}, {5, 6}, {5, 5}, {9, 5}, {8, 6}, {10, 5}, {10, 6}, {10, 7}}
+	initialActive := [][]int{{34, 34}, {34, 35}, {35, 36}, {35, 35}, {9, 5}, {8, 6}, {10, 5}, {10, 6}, {10, 7}}
 	for _, element := range initialActive {
 		grid[element[0]][element[1]] = 1
 	}
