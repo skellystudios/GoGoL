@@ -9,7 +9,7 @@ import (
 )
 
 // gridSize: N x N size of the grid
-const gridSize = 20
+const gridSize = 30
 
 // generations: How long to run the simulation for
 const generations = 100
