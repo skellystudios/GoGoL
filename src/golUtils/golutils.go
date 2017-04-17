@@ -10,11 +10,11 @@ import (
 	"time"
 )
 
-// gridSize: N x N size of the grid
-const GridSize = 45
+// GridSize: N x N size of the grid
+const GridSize = 30
 
-// generations: How long to run the simulation for
-const Generations = 1000
+// Generations: How long to run the simulation for
+const Generations = 100
 
 func GetNeighbours(coords []int) [][]int {
 	directions := [][]int{{-1, -1}, {-1, 0}, {0, -1}, {0, 1}, {1, 0}, {1, 1}, {1, -1}, {-1, 1}}
@@ -60,11 +60,11 @@ func InitalizeGrid() [][]int {
 		}
 	}
 
-	// Now we put some simple initial things in (a glider, and something which collapses to a stready diamond)
-	initialActive := [][]int{{34, 34}, {34, 35}, {35, 36}, {35, 35}, {9, 5}, {8, 6}, {10, 5}, {10, 6}, {10, 7}}
-	for _, element := range initialActive {
-		grid[element[0]][element[1]] = 1
-	}
+	// // Now we put some simple initial things in (a glider, and something which collapses to a stready diamond)
+	// initialActive := [][]int{{34, 34}, {34, 35}, {35, 36}, {35, 35}, {9, 5}, {8, 6}, {10, 5}, {10, 6}, {10, 7}}
+	// for _, element := range initialActive {
+	// 	grid[element[0]][element[1]] = 1
+	// }
 
 	return grid
 }
