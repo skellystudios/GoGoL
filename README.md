@@ -2,6 +2,7 @@
 
 Simulate Game of Life in Go using looping over arrays and using goroutines+channels
 
+![Look at their pathetic lives](http://www.giphy.com/gifs/xUA7aPDIIviSXVFm12)
 
 ## To run
 

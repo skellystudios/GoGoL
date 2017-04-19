@@ -14,7 +14,7 @@ import (
 const GridSize = 30
 
 // Generations: How long to run the simulation for
-const Generations = 100
+const Generations = 500
 
 func GetNeighbours(coords []int) [][]int {
 	directions := [][]int{{-1, -1}, {-1, 0}, {0, -1}, {0, 1}, {1, 0}, {1, 1}, {1, -1}, {-1, 1}}
